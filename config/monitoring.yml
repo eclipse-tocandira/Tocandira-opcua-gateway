@@ -1,0 +1,20 @@
+# Copyright (c) 2017 Aimirim STI.
+
+services:
+
+  orchestrator:
+    container_name: orchestrator
+    watch_files:
+      - /home/config/monitoring.yml
+
+  forte_server:
+    container_name: forte_server
+    watch_files:
+      - /home/fboot/gw_opc.fboot
+
+  forte_tester:
+    container_name: forte_tester
+    watch_files:
+      - /home/fboot/opc_tester.fboot
+
+
