@@ -1,0 +1,60 @@
+version: "3"
+networks:
+  forte-net:
+    driver: bridge
+
+services:
+
+  forte_server:
+    container_name: forte_server
+    image: forte:0.5.0-x86_64
+    networks:
+      - forte-net
+    restart: always
+    environment:
+      FORTE_TYPE: RELEASE
+    ports:
+      - "61499"
+      - "$GW_PORT:4840"
+    volumes:
+      - ./fboot:/home/fboot
+    command: [-op, '4840', -f, /home/fboot/$GW_FBOOT ]
+    logging:
+      options:
+        max-size: $LOG_RETENTION
+  
+  forte_tester:
+    container_name: forte_tester
+    image: forte:0.5.0-x86_64
+    networks:
+      - forte-net
+    restart: always
+    environment:
+      FORTE_TYPE: RELEASE
+    ports:
+      - "61499"
+      - "$TESTER_PORT:4840"
+    volumes:
+      - ./fboot:/home/fboot
+    command: [-op, '4840', -f, /home/fboot/$TESTER_FBOOT ]
+    logging:
+      options:
+        max-size: $LOG_RETENTION
+
+  watchdog:
+    container_name: watchdog_forte
+    build:
+      dockerfile: Dockerfile
+      context: ./watchdog
+    networks:
+      - forte-net
+    restart: always
+    environment:
+      WATCH_FOLDER: /home
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config:/home/config
+      - ./fboot:/home/fboot
+    logging:
+      options:
+        max-size: $LOG_RETENTION
