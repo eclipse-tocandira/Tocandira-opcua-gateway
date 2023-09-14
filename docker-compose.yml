@@ -5,6 +5,28 @@ networks:
 
 services:
 
+  exporter:
+    container_name: exporter
+    build:
+      dockerfile: Dockerfile
+      context: ./opcua_exporter
+    networks:
+      - forte-net
+    restart: always
+    user: $USER_ID
+    volumes: 
+      - ./config:/config
+    ports:
+      - "9686:9686"
+    command: [
+      -config, /config/opcua_exporter.yml, 
+      -read-timeout, "$EXPORTER_TIMEOUT",
+      -max-timeouts, "$EXPORTER_MAX_TIMEOUT",
+      -force-read, "$EXPORTER_FORCE_READ" ]
+    logging:
+      options:
+        max-size: $LOG_RETENTION
+  
   forte_server:
     container_name: forte_server
     image: forte:0.5.0-x86_64
@@ -15,7 +37,7 @@ services:
       FORTE_TYPE: RELEASE
     ports:
       - "61499"
-      - "$GW_PORT:4840"
+      - "4840"
     volumes:
       - ./fboot:/home/fboot
     command: [-op, '4840', -f, /home/fboot/$GW_FBOOT ]
@@ -55,6 +77,33 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./config:/home/config
       - ./fboot:/home/fboot
+    logging:
+      options:
+        max-size: $LOG_RETENTION
+
+  hardware_monitor:
+    container_name: hardware_monitor
+    image: prom/node-exporter:v1.5.0
+    network_mode: host
+    pid: host
+    restart: always
+    ports:
+      - "9100:9100"
+    volumes:
+      - /:/host:ro,rslave
+    command: [
+      '--path.rootfs=/host',
+      '--web.disable-exporter-metrics',
+      '--collector.disable-defaults',
+      '--collector.cpu',
+      '--collector.meminfo',
+      '--collector.hwmon',
+      '--collector.netdev',
+      '--collector.filesystem',
+      '--collector.filesystem.fs-types-exclude=.*(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs|tmpfs|nfsd).*',
+      '--collector.filesystem.mount-points-exclude=.*var/log.*',
+      '--collector.diskstats',
+    ]
     logging:
       options:
         max-size: $LOG_RETENTION
