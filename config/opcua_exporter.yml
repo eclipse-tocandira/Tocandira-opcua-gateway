@@ -1,0 +1,8 @@
+# Copyright (c) 2017 Aimirim STI.
+
+endPoint: opc.tcp://forte_server:4840
+
+nodes:
+  - metricName: _ForteCycleTime
+    metricHelp: Tempo de leitura das variavies do Forte
+    nodeName: ns=1;s=_ForteCycleTime
