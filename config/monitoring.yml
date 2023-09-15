@@ -7,6 +7,11 @@ services:
     watch_files:
       - /home/config/monitoring.yml
 
+  exporter:
+    container_name: exporter
+    watch_files:
+      - /home/config/opcua_exporter.yml
+
   forte_server:
     container_name: forte_server
     watch_files:
