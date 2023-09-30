@@ -27,7 +27,7 @@ services:
   
   forte_server:
     container_name: forte_server
-    image: forte:0.5.1-x86_64
+    image: forte:0.6.0-x86_64
     networks:
       - forte-net
     restart: always
@@ -45,7 +45,7 @@ services:
   
   forte_tester:
     container_name: forte_tester
-    image: forte:0.5.1-x86_64
+    image: forte:0.6.0-x86_64
     networks:
       - forte-net
     restart: always
