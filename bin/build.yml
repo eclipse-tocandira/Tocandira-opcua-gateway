@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+
+  exporter:
+    container_name: exporter
+    build:
+      dockerfile: Dockerfile
+      context: ../opcua_exporter
+    image: tocandira_exporter:0.2.0
+    
+  watchdog:
+    container_name: watchdog_forte
+    build:
+      dockerfile: Dockerfile
+      context: ../watchdog
+    image: tocandira_watchdog:0.2.0
