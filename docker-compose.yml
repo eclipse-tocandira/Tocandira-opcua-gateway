@@ -11,11 +11,10 @@ services:
     networks:
       - forte-net
     restart: always
-    user: $USER_ID
     volumes: 
-      - ./config:/config
+      - "$EXPORTER_CONFIG_LOCATION:/config/opcua_exporter.yml"
     ports:
-      - "9686:9686"
+      - "$METRICS_PORT:9686"
     command: [
       -config, /config/opcua_exporter.yml, 
       -read-timeout, "$EXPORTER_TIMEOUT",
@@ -37,8 +36,8 @@ services:
       - "61499"
       - "4840"
     volumes:
-      - ./fboot:/home/fboot
-    command: [-op, '4840', -f, /home/fboot/$GW_FBOOT ]
+      - "$GATEWAY_FBOOT_LOCATION:/forte.fboot"
+    command: [-op, '4840']
     logging:
       options:
         max-size: $LOG_RETENTION
@@ -53,10 +52,10 @@ services:
       FORTE_TYPE: RELEASE
     ports:
       - "61499"
-      - "$TESTER_PORT:4840"
+      - "$TESTESERVER_PORT:4840"
     volumes:
-      - ./fboot:/home/fboot
-    command: [-op, '4840', -f, /home/fboot/$TESTER_FBOOT ]
+      - "$TESTESERVER_FBOOT_LOCATION:/forte.fboot"
+    command: [-op, '4840']
     logging:
       options:
         max-size: $LOG_RETENTION
