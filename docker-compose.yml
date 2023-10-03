@@ -7,7 +7,7 @@ services:
 
   exporter:
     container_name: exporter
-    image: tocandira_exporter:0.2.0
+    image: aimirim/tocandira-exporter:0.2.0
     networks:
       - forte-net
     restart: always
@@ -62,7 +62,7 @@ services:
 
   watchdog:
     container_name: watchdog_forte
-    image: tocandira_watchdog:0.2.0
+    image: aimirim/tocandira-watchdog:0.2.0
     networks:
       - forte-net
     restart: always

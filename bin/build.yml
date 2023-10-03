@@ -7,11 +7,11 @@ services:
     build:
       dockerfile: Dockerfile
       context: ../opcua_exporter
-    image: tocandira_exporter:0.2.0
+    image: aimirim/tocandira-exporter:0.2.0
     
   watchdog:
     container_name: watchdog_forte
     build:
       dockerfile: Dockerfile
       context: ../watchdog
-    image: tocandira_watchdog:0.2.0
+    image: aimirim/tocandira-watchdog:0.2.0
